@@ -10,7 +10,7 @@ import styles from './BookForm.module.css';
 import { updateBook, addBook } from '../../../lib/common';
 
 function BookForm({ book, validate }) {
-  const userRating = book ? book.ratings.find((elt) => elt.userId === localStorage.getItem('userId'))?.grade : 0;
+  const userRating = book ? book?.ratings?.find((elt) => elt.userId === localStorage.getItem('userId'))?.grade : 0;
 
   const [rating, setRating] = useState(0);
 

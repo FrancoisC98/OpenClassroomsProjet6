@@ -5,6 +5,7 @@ const bookRoutes = require ('./routes/book.routes')
 const authRoutes = require ('./routes/auth')
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path')
 
 dotenv.config();
 const app = express();
@@ -27,6 +28,9 @@ app.use((req, res, next) => {
   console.log('Body:', req.body);
   next();
 });
+
+// Acces au dossier image
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 //Connexion à MongoDB
 connectDB();

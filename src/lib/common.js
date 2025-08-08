@@ -57,10 +57,13 @@ export async function getBooks() {
 export async function getBook(id) {
   try {
     const token = localStorage.getItem('token');
+    console.log('Token envoyé dans getBook:', token);
     const response = await axios({
       method: 'GET',
       url: `${API_ROUTES.BOOKS}/${id}`,
-      Authorization: `Bearer ${token}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
     const book = response.data;
     // eslint-disable-next-line no-underscore-dangle
@@ -71,14 +74,15 @@ export async function getBook(id) {
     return null;
   }
 }
-
 export async function getBestRatedBooks() {
   try {
     const token = localStorage.getItem('token');
     const response = await axios({
       method: 'GET',
       url: `${API_ROUTES.BEST_RATED}`,
-      Authorization: `Bearer ${token}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
     return formatBooks(response.data);
   } catch (e) {
@@ -88,9 +92,10 @@ export async function getBestRatedBooks() {
 }
 export async function deleteBook(id) {
   try {
+    const token = localStorage.getItem('token');
     await axios.delete(`${API_ROUTES.BOOKS}/${id}`, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     return true;
@@ -107,9 +112,10 @@ export async function rateBook(id, userId, rating) {
   };
 
   try {
+    const token = localStorage.getItem('token');
     const response = await axios.post(`${API_ROUTES.BOOKS}/${id}/rating`, data, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     const book = response.data;
@@ -123,6 +129,8 @@ export async function rateBook(id, userId, rating) {
 }
 
 export async function addBook(data) {
+  console.log('Fichier envoyé:', data.file[0]);
+  console.log('Nom du fichier:', data.file[0]?.name);
   const userId = localStorage.getItem('userId');
   const book = {
     userId,
@@ -141,12 +149,13 @@ export async function addBook(data) {
   bodyFormData.append('image', data.file[0]);
 
   try {
+    const token = localStorage.getItem('token');
     return await axios({
       method: 'post',
       url: `${API_ROUTES.BOOKS}`,
       data: bodyFormData,
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${token}`,
       },
     });
   } catch (err) {
@@ -156,11 +165,8 @@ export async function addBook(data) {
 }
 
 export async function updateBook(data, id) {
-  const userId = localStorage.getItem('userId');
-
   let newData;
   const book = {
-    userId,
     title: data.title,
     author: data.author,
     year: data.year,
@@ -176,12 +182,13 @@ export async function updateBook(data, id) {
   }
 
   try {
+    const token = localStorage.getItem('token');
     const newBook = await axios({
       method: 'put',
       url: `${API_ROUTES.BOOKS}/${id}`,
       data: newData,
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     return newBook;

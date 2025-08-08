@@ -32,7 +32,7 @@ function Book() {
 
   useEffect(() => {
     if (!userLoading && connectedUser && book?.title) {
-      const rate = book.ratings.find((elt) => elt.userId === connectedUser.userId);
+      const rate = book?.ratings?.find((elt) => elt.userId === connectedUser.userId);
       if (rate) {
         setUserRated(true);
         setRating(parseInt(rate.grade, 10));
@@ -68,6 +68,10 @@ function Book() {
       <div className={styles.Book}>
         <div className={styles.BookImage} style={{ backgroundImage: `url("${book.imageUrl}")` }} />
         <div className={styles.BookContent}>
+
+          {console.log('Livre de :', book?.userId)}
+          {console.log('Utilisateur connecté :', connectedUser?.userId)}
+
           {book?.userId === connectedUser?.userId ? (
             <div className={styles.Owner}>
               <p>Vous avez publié cet ouvrage, vous pouvez le :</p>

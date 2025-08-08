@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 module.exports = (req, res, next) => {
     try {
         const authorization = req.headers.authorization;
+        console.log('Authorization header:', authorization);
 
         if (!authorization) {
             return res.status(401).json({ message: 'Authentification manquante'});
@@ -14,6 +15,7 @@ module.exports = (req, res, next) => {
 
         next();
     }   catch (error) {
+        console.log('Erreur auth middleware:', error.message);
         res.status(401).json({ message: 'Requête non authentifiée'})
     }
 };
