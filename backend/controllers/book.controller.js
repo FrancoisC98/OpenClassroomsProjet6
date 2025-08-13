@@ -3,6 +3,7 @@ const path = require ('path');
 const sharp = require('sharp');
 const mongoose = require('mongoose');
 const fs = require ('fs');
+const book = require('../models/book');
 
 
 exports.getAllBooks = (req, res) => {
@@ -43,11 +44,12 @@ exports.getOneBook = (req, res, next) => {
 // AJOUTER LIVRE
 
 exports.createBook = (req, res, next) => {
-    console.log("req.auth:", req.body);
-    console.log("req.body:", req.body);
+
   const bookObject = JSON.parse(req.body.book);
 
   delete bookObject._id;
+
+  bookObject.ratings = Array.isArray(bookObject.ratings) ? bookObject.ratings : [];
 
   const filename = `book_${Date.now()}.webp`;
   const outputPath = path.join(__dirname, '../images', filename);
@@ -97,6 +99,7 @@ exports.updateBook = (req, res) => {
   } else {
     bookObject = req.body;
   }
+  bookObject.ratings = Array.isArray(bookObject.ratings) ? bookObject.ratings : [];
   Book.findById(req.params.id)
     .then(book => {
       if (!book) return res.status(404).json({ message: 'Livre non trouvé' });
@@ -148,7 +151,45 @@ exports.deleteBook = (req, res) => {
     .catch(err => res.status(500).json({ error: err.message }));
 };
 
+// Note livre
 
+exports.rateBook = (req, res) => {
+  console.log('rateBook appelé', req.params.id, req.body, req.auth.userId);
+  const { rating } = req.body;
+  const userId = req.auth.userId;
+
+  if (rating < 0 || rating > 5) {
+    return res.status(400).json({ error: 'La note doit être comprise entre 0 et 5.' });
+  }
+
+  Book.findById(req.params.id)
+    .then(book => {
+      if (!book) {
+        return res.status(404).json({ message: 'Livre non trouvé' });
+      }
+
+      book.ratings = Array.isArray(book.ratings) ? book.ratings : [];
+
+      if (book.ratings.find(r => r.userId === userId)) {
+        return res.status(400).json({ message: 'Vous avez déjà noté ce livre.' });
+      }
+
+      book.ratings.push({ userId, grade: rating });
+
+      book.averageRating =
+        book.ratings.reduce((sum, r) => sum + r.grade, 0) / book.ratings.length;
+
+      return book.save();
+    })
+    .then(updatedBook => {
+      if (updatedBook) {
+        res.status(200).json(updatedBook);
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ message: 'Erreur serveur', error: err });
+    });
+};
 
 exports.getBestRatedBooks = (req, res) => {
   Book.find().sort({ averageRating: -1 }).limit(3)

@@ -37,6 +37,7 @@ connectDB();
 
 //Routes
 app.use('/api/auth', authRoutes);
+console.log('Book routes montées');
 app.use('/api/books', bookRoutes)
 
 //Route accueil

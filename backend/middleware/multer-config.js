@@ -5,8 +5,9 @@ const path = require ('path')
 
 // Filtre les fichiers, on veut que les images
 const fileFilter = (req, file, callback) => {
-    const allowedTypes = ['.png', '.jpg', '.jpeg', '.gif', 'webp'];
+    const allowedTypes = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
     const ext = path.extname(file.originalname).toLowerCase();
+        console.log('Extension reçue:', ext); // Ajoute ce log
     if (allowedTypes.includes(ext)) {
         callback(null, true);
     }   else {

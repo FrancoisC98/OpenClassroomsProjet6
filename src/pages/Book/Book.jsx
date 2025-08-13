@@ -32,7 +32,8 @@ function Book() {
 
   useEffect(() => {
     if (!userLoading && connectedUser && book?.title) {
-      const rate = book?.ratings?.find((elt) => elt.userId === connectedUser.userId);
+      const ratings = Array.isArray(book?.ratings) ? book.ratings : [];
+      const rate = ratings.find((elt) => elt.userId === connectedUser.userId);
       if (rate) {
         setUserRated(true);
         setRating(parseInt(rate.grade, 10));

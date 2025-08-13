@@ -6,7 +6,14 @@ const bookSchema = mongoose.Schema({
     author: { type: String, required: true },
     imageUrl: { type: String },
     year: { type: Number },
-    genre: { type: String }   
+    genre: { type: String },
+    ratings: [
+        {
+            userId: { type: String, required: true },
+            grade: { type: Number, required: true }
+        }
+    ],
+    averageRating: { type: Number, default: 0 },
 });
 
 module.exports = mongoose.model('Book', bookSchema);
