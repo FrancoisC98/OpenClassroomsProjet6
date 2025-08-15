@@ -12,7 +12,7 @@ router.delete('/:id', auth, bookCtrl.deleteBook);
 
 router.get('/', bookCtrl.getAllBooks);
 router.get('/bestrating', bookCtrl.getBestRatedBooks);
-router.get('/:id', auth, bookCtrl.getOneBook);
+router.get('/:id', bookCtrl.getOneBook);
 
 
 

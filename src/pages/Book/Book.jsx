@@ -46,7 +46,7 @@ function Book() {
     } else if (!userLoading && !connectedUser && book) {
       setLoading(false);
     }
-  }, [book, userLoading]);
+  }, [book, userLoading, connectedUser]);
 
   const onDelete = async (e) => {
     if (e.key && e.key !== 'Enter') {
@@ -70,9 +70,6 @@ function Book() {
         <div className={styles.BookImage} style={{ backgroundImage: `url("${book.imageUrl}")` }} />
         <div className={styles.BookContent}>
 
-          {console.log('Livre de :', book?.userId)}
-          {console.log('Utilisateur connecté :', connectedUser?.userId)}
-
           {book?.userId === connectedUser?.userId ? (
             <div className={styles.Owner}>
               <p>Vous avez publié cet ouvrage, vous pouvez le :</p>
@@ -85,14 +82,18 @@ function Book() {
             </div>
           ) : null}
           <BookInfo book={book} />
-          <BookRatingForm
-            userRated={userRated}
-            userId={connectedUser?.userId}
-            rating={rating}
-            setRating={setRating}
-            setBook={setBook}
-            id={book.id}
-          />
+          {connectedUser ? (
+            <BookRatingForm
+              userRated={userRated}
+              userId={connectedUser?.userId}
+              rating={rating}
+              setRating={setRating}
+              setBook={setBook}
+              id={book.id}
+            />
+          ) : (
+            <p>Connectez-vous pour noter cet ouvrage.</p>
+          )}
         </div>
       </div>
       <hr />
