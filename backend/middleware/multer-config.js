@@ -7,7 +7,6 @@ const path = require ('path')
 const fileFilter = (req, file, callback) => {
     const allowedTypes = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
     const ext = path.extname(file.originalname).toLowerCase();
-        console.log('Extension reçue:', ext); // Ajoute ce log
     if (allowedTypes.includes(ext)) {
         callback(null, true);
     }   else {
@@ -15,7 +14,7 @@ const fileFilter = (req, file, callback) => {
     }
 };
 
-
+// stockage
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'images');

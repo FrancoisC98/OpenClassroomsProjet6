@@ -28,8 +28,7 @@ exports.getOneBook = (req, res, next) => {
 
       const bookObject = book.toObject({ getters: true });
 
-      // On force la conversion en string ou null si absent
-      bookObject.userId = book.userId ? book.userId.toString() : null;
+      bookObject.userId = book.userId ? book.userId.toString() : null; // force la conversion en string ou null si absent
       console.log("Book object ready to send :", bookObject);
 
       res.status(200).json(bookObject);
@@ -94,7 +93,7 @@ sharp(req.file.path)
 exports.updateBook = (req, res) => {
   let bookObject = {};
   if (req.file) {
-    bookObject = JSON.parse(req.body.book); // parce que côté client tu envoies 'book' en JSON stringifié
+    bookObject = JSON.parse(req.body.book);
     bookObject.imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
   } else {
     bookObject = req.body;
@@ -151,7 +150,7 @@ exports.deleteBook = (req, res) => {
     .catch(err => res.status(500).json({ error: err.message }));
 };
 
-// Note livre
+// NOTE LIVRES
 
 exports.rateBook = (req, res) => {
   console.log('rateBook appelé', req.params.id, req.body, req.auth.userId);
@@ -190,6 +189,9 @@ exports.rateBook = (req, res) => {
       res.status(500).json({ message: 'Erreur serveur', error: err });
     });
 };
+
+
+// 3 meilleurs livres
 
 exports.getBestRatedBooks = (req, res) => {
   Book.find().sort({ averageRating: -1 }).limit(3)

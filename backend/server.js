@@ -15,7 +15,7 @@ app.use(express.json());
 
 //CORS
 app.use(cors({
-  origin: true, // autorise toutes les origines (pour test)
+  origin: true,
   credentials: true,
 }));
 
@@ -29,7 +29,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Acces au dossier image
+// Acces aux images
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 //Connexion à MongoDB
